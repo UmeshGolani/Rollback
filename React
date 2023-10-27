@@ -1,0 +1,75 @@
+import React, { useState } from 'react';
+
+function App() {
+  const [leftList, setLeftList] = useState(['Item 1', 'Item 2', 'Item 3']);
+  const [rightList, setRightList] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleCheckboxChange = (item) => {
+    const index = selectedItems.indexOf(item);
+    if (index === -1) {
+      setSelectedItems([...selectedItems, item]);
+    } else {
+      const updatedSelectedItems = [...selectedItems];
+      updatedSelectedItems.splice(index, 1);
+      setSelectedItems(updatedSelectedItems);
+    }
+  };
+
+  const moveRight = () => {
+    const updatedLeftList = leftList.filter((item) => !selectedItems.includes(item));
+    const updatedRightList = [...rightList, ...selectedItems];
+    setLeftList(updatedLeftList);
+    setRightList(updatedRightList);
+    setSelectedItems([]);
+  };
+
+  const moveLeft = () => {
+    const updatedRightList = rightList.filter((item) => !selectedItems.includes(item));
+    const updatedLeftList = [...leftList, ...selectedItems];
+    setRightList(updatedRightList);
+    setLeftList(updatedLeftList);
+    setSelectedItems([]);
+  };
+
+  return (
+    <div>
+      <button onClick={moveRight}>Move to Right</button>
+      <button onClick={moveLeft}>Move to Left</button>
+
+      <div>
+        <h2>Left List</h2>
+        <ul>
+          {leftList.map((item, index) => (
+            <li key={index}>
+              <input
+                type="checkbox"
+                checked={selectedItems.includes(item)}
+                onChange={() => handleCheckboxChange(item)}
+              />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h2>Right List</h2>
+        <ul>
+          {rightList.map((item, index) => (
+            <li key={index}>
+              <input
+                type="checkbox"
+                checked={selectedItems.includes(item)}
+                onChange={() => handleCheckboxChange(item)}
+              />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default App;
